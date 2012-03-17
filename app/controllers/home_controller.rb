@@ -5,24 +5,24 @@ class HomeController < ApplicationController
   end
   
  def up
-    session[:id] = true
     ship = Ship.find(params[:id])
-    if !session.has_key? :id
+    if !session.has_key? params[:id]
         ship.votes += 1
         ship.save
     end
+    session[params[:id]] = true
     @dict = {"id" => ship.id, "count" => ship.votes}
     render :json => @dict
 
  end
  
  def down
-    session[:id] = true
     ship = Ship.find(params[:id])
-    if !session.has_key? :id
+    if !session.has_key? params[:id]
         ship.votes -= 1
         ship.save
     end
+    session[params[:id]] = true
     @dict = {"id" => ship.id, "count" => ship.votes}
     render :json => @dict
  end
