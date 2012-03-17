@@ -1,6 +1,6 @@
 class HomeController < ApplicationController
   def index
-    @ships = Ship.all
+    @ships = Ship.find(:all, :order => "votes DESC")
     @people = Person.all
   end
   
