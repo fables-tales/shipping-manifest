@@ -1,0 +1,84 @@
+<div class="wrapper">
+<div id="notify" style="display:none;"></div>
+<h1>#BAG Shipping manifest</h1>
+<h2>Existing ships</h2>
+
+<% @ships.each do |ship| %>
+    <div class="surround">
+        <div class="votes">
+            <a href="#" class="<%= ship.id %> up">MOAR</a>
+            <p id="ship<%=ship.id%>" class="boats"><%= ship.votes                     %></p>
+            <a href="#" class="<%= ship.id %> down">NOPE</a>
+        </div>
+        <div class="people">
+            <p class="inner-people">
+                <%= Person.find(ship.person1).name %>
+                &#x2665;
+                <%= Person.find(ship.person2).name %>
+            </p>
+        </div>
+    </div>
+    <div class="clear">
+    </div>
+    <hr/>
+<% end %>
+
+<div class="new">
+    <h2>Create a new ship</h2>
+    </h2>
+    <form action="/new" method="post">
+        <select name="name1">
+            <% @people.each do |person| %>
+                <option value="<%= person.id %>"><%= person.name %></option>
+            <% end %>
+        </select>
+        <select name="name2">
+            <% @people.each do |person| %>
+                <option value="<%= person.id %>"><%= person.name %></option>
+            <% end %>
+        </select>
+        <input type="submit" name="submit" value="Submit"/>
+    </form>
+</div>
+
+
+<script type="text/javascript">
+    var i;
+    var ar = $("a")
+
+    function uc(data) {
+        var obj = data
+        $("#ship" + obj["id"]).text(obj["count"])
+    }
+
+    for (i = 0; i < ar.length; i++) {
+        var c = $(ar[i]).attr("class")
+        var id = c.split(" ")[0]
+        var type = c.split(" ")[1]
+        if (type == "up") {
+            $(ar[i]).mouseup(function() {
+                $.get("/up/" + id, uc);
+            });
+        }
+        if (type == "down") {
+            $(ar[i]).mouseup(function() {
+                $.get("/down/" + id, uc);
+            });
+        }
+        
+    }
+
+    if (document.location.hash == "#new") {
+        $("#notify").text("New ship created successfully") 
+        $("#notify").show()
+        setTimeout('$("#notify").hide()', 3000);
+    }
+    if (document.location.hash == "#exists") {
+        $("#notify").text("This ship already exists!");
+        $("#notify").show()
+        setTimeout('$("#notify").hide()', 3000);
+    }
+</script>
+
+<br />
+</div>
